@@ -6,7 +6,7 @@
 /*   By: tmorais- <tmorais-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 12:07:41 by tmorais-          #+#    #+#             */
-/*   Updated: 2025/11/10 14:23:51 by tmorais-         ###   ########.fr       */
+/*   Updated: 2025/11/10 17:25:57 by tmorais-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void	load_images(t_game *game)
 	size = TILE_SIZE;
 	game->img_wall = mlx_xpm_file_to_image(game->mlx, "textures/wall.xpm",
 			&size, &size);
-	game->img_floor = mlx_xpm_file_to_image(game->mlx, "textures/floor.xpm",
+	game->img_floor = mlx_xpm_file_to_image(game->mlx, "textures/ground.xpm",
 			&size, &size);
 	game->img_player = mlx_xpm_file_to_image(game->mlx, "textures/player.xpm",
 			&size, &size);
 	game->img_collect = mlx_xpm_file_to_image(game->mlx,
-			"textures/collectible.xpm", &size, &size);
+			"textures/coin.xpm", &size, &size);
 	game->img_exit = mlx_xpm_file_to_image(game->mlx, "textures/exit.xpm",
 			&size, &size);
 }
