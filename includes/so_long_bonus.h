@@ -10,6 +10,8 @@
 
 # define TILE_SIZE 64
 # define WIN_TITLE "so_long - bonus"
+# define ENEMY_MOVE_DELAY 60  // Frames entre movimentos dos inimigos
+# define ENEMY_START_DELAY 180 // Frames antes do primeiro movimento
 
 // Estrutura de animação
 typedef struct s_anim
@@ -58,6 +60,7 @@ typedef struct s_game
 	void		*img_player;
 	void		*img_exit;
 	void		*img_collect;
+	void		*img_enemy;
 	int			frame_counter;
 }	t_game;
 

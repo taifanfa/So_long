@@ -6,7 +6,7 @@
 /*   By: tmorais- <tmorais-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 12:00:00 by tmorais-          #+#    #+#             */
-/*   Updated: 2025/11/11 12:00:00 by tmorais-         ###   ########.fr       */
+/*   Updated: 2025/11/12 13:50:14 by tmorais-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,16 @@ void	*get_player_sprite(t_game *game)
 	int	base;
 	int	frame;
 
+	if (!game)
+		return (NULL);
+	if (game->player.anim.frame_count == 0)
+		return (game->img_player);
 	base = game->player.direction * 2;
 	frame = (game->frame_counter / 30) % 2;
+	if (base + frame >= game->player.anim.frame_count)
+		return (game->img_player);
+	if (!game->player.anim.frames[base + frame])
+		return (game->img_player);
 	return (game->player.anim.frames[base + frame]);
 }
 
@@ -51,6 +59,8 @@ void	destroy_animations(t_game *game)
 {
 	int	i;
 
+	if (!game || !game->mlx)
+		return ;
 	i = 0;
 	while (i < game->player.anim.frame_count)
 	{

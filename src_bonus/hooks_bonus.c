@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hooks_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmfanfa <tmfanfa@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tmorais- <tmorais-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/10 10:26:01 by tmorais-          #+#    #+#             */
-/*   Updated: 2025/11/11 12:20:05 by tmfanfa          ###   ########.fr       */
+/*   Created: 2025/11/12 16:07:12 by tmorais-          #+#    #+#             */
+/*   Updated: 2025/11/12 16:07:14 by tmorais-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,16 @@
 # define KEY_D 100
 #endif
 
-int game_loop(t_game *game)
+int	game_loop(t_game *game)
 {
-    game->frame_counter++;
-
-    // Move inimigos a cada 60 frames (ajuste conforme necessário)
-    if (game->frame_counter % 60 == 0)
-        move_enemies(game);
-
-    // Re-renderiza
-    render_game(game);
-
-    return (0);
+	game->frame_counter++;
+	if (game->frame_counter >= ENEMY_START_DELAY && \
+		game->frame_counter % ENEMY_MOVE_DELAY == 0)
+	{
+		move_enemies(game);
+	}
+	render_game(game);
+	return (0);
 }
 
 int	handle_keypress(int keycode, t_game *game)
@@ -55,19 +53,31 @@ int	handle_keypress(int keycode, t_game *game)
 	return (0);
 }
 
-int	close_game(t_game *game)
+static void	cleanup_game(t_game *game)
 {
-	if (!game)
-		exit(0);
+	destroy_animations(game);
 	destroy_images(game);
+	if (game->enemies)
+	{
+		free(game->enemies);
+		game->enemies = NULL;
+	}
 	if (game->win && game->mlx)
 		mlx_destroy_window(game->mlx, game->win);
 	if (game->mlx)
 	{
 		mlx_destroy_display(game->mlx);
 		free(game->mlx);
+		game->mlx = NULL;
 	}
 	free_map(game->map);
+}
+
+int	close_game(t_game *game)
+{
+	if (!game)
+		exit(0);
+	cleanup_game(game);
 	exit(0);
 	return (0);
 }
@@ -75,8 +85,8 @@ int	close_game(t_game *game)
 void	setup_hooks(t_game *game)
 {
 	if (!game || !game->win)
-        return;
-    mlx_hook(game->win, 2, 1L << 0, handle_keypress, game);
-    mlx_hook(game->win, 17, 0, close_game, game);
-    mlx_loop_hook(game->mlx, game_loop, game);  // Adicionar loop
+		return ;
+	mlx_hook(game->win, 2, 1L << 0, handle_keypress, game);
+	mlx_hook(game->win, 17, 0, close_game, game);
+	mlx_loop_hook(game->mlx, game_loop, game);
 }

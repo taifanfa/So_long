@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tmorais- <tmorais-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 12:06:05 by tmorais-          #+#    #+#             */
-/*   Updated: 2025/11/10 13:05:03 by tmorais-         ###   ########.fr       */
+/*   Updated: 2025/11/12 12:12:09 by tmorais-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,22 @@ void	init_game(t_game *game)
 	game->player.x = 0;
 	game->player.y = 0;
 	game->player.moves = 0;
+	game->player.direction = 0;
+	game->player.anim.current = 0;
+	game->player.anim.frame_count = 0;
 	game->player_count = 0;
 	game->exit_count = 0;
 	game->collect_count = 0;
+	game->frame_counter = 0;
+	game->enemies = NULL;
+	game->enemy_count = 0;
 	game->img_floor = NULL;
 	game->img_wall = NULL;
 	game->img_player = NULL;
 	game->img_exit = NULL;
 	game->img_collect = NULL;
+	game->img_enemy = NULL;
+	game->frame_counter = 0;
 }
 
 static int	setup_game(t_game *game, char *path)
@@ -59,10 +67,15 @@ static void	start_game(t_game *game)
 	game->win = mlx_new_window(game->mlx, game->map_w * TILE_SIZE,
 			game->map_h * TILE_SIZE, WIN_TITLE);
 	load_images(game);
+	load_player_animations(game);
+	init_enemies(game);
 	render_game(game);
 	setup_hooks(game);
 	mlx_loop(game->mlx);
 	destroy_images(game);
+	destroy_animations(game);
+	if (game->enemies)
+		free(game->enemies);
 	free_map(game->map);
 }
 

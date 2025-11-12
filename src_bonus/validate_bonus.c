@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmfanfa <tmfanfa@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tmorais- <tmorais-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 12:10:42 by tmorais-          #+#    #+#             */
-/*   Updated: 2025/11/11 12:19:28 by tmfanfa          ###   ########.fr       */
+/*   Updated: 2025/11/12 14:08:30 by tmorais-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static int	check_valid_chars(t_game *game)
 		while (game->map[y][x])
 		{
 			if (game->map[y][x] != '\n' && \
-				 !ft_strchr("01PECM", game->map[y][x]))
-        return (print_error("Map contains invalid characters."), 0);
+				!ft_strchr("01PECM", game->map[y][x]))
+				return (print_error("Map contains invalid characters."), 0);
 			x++;
 		}
 		y++;
@@ -80,6 +80,31 @@ static int	check_walls(t_game *game)
 	return (1);
 }
 
+static int	check_enemy_player_collision(t_game *game)
+{
+	int	y;
+	int	x;
+	int	px;
+	int	py;
+
+	px = game->player.x;
+	py = game->player.y;
+	y = 0;
+	while (game->map[y])
+	{
+		x = 0;
+		while (game->map[y][x])
+		{
+			if (game->map[y][x] == 'M' && x == px && y == py)
+				return (print_error("Enemy cannot spawn on player \
+					position"), 0);
+			x++;
+		}
+		y++;
+	}
+	return (1);
+}
+
 int	validate_map(t_game *game)
 {
 	if (!check_rectangular(game))
@@ -91,6 +116,8 @@ int	validate_map(t_game *game)
 	if (!check_walls(game))
 		return (0);
 	if (!validate_paths(game))
+		return (0);
+	if (!check_enemy_player_collision(game))
 		return (0);
 	return (1);
 }

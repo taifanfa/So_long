@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   player_bonus.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tmorais- <tmorais-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/12 16:08:16 by tmorais-          #+#    #+#             */
+/*   Updated: 2025/11/12 16:08:18 by tmorais-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long_bonus.h"
 
 int	can_move_to(t_game *game, int x, int y)
@@ -9,6 +21,39 @@ int	can_move_to(t_game *game, int x, int y)
 	if (game->map[y][x] == '1')
 		return (0);
 	return (1);
+}
+
+static void	update_player_direction(t_game *game, int dx, int dy)
+{
+	if (dy == -1)
+		game->player.direction = 0;
+	else if (dy == 1)
+		game->player.direction = 1;
+	else if (dx == -1)
+		game->player.direction = 2;
+	else if (dx == 1)
+		game->player.direction = 3;
+}
+
+static int	check_enemy_at_position(t_game *game, int x, int y)
+{
+	int	i;
+
+	if (!game || !game->enemies)
+		return (0);
+	i = 0;
+	while (i < game->enemy_count)
+	{
+		if (game->enemies[i].x == x && game->enemies[i].y == y)
+		{
+			printf("!!! PLAYER WALKED INTO ENEMY !!!\n");
+			printf("Game Over! You touched an enemy!\n");
+			close_game(game);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
 }
 
 static void	handle_collectible(t_game *game, int nx, int ny)
@@ -28,36 +73,17 @@ static int	handle_exit(t_game *game)
 	return (0);
 }
 
-/* NOVA FUNÇÃO: Atualizar direção do jogador baseado no movimento */
-static void	update_player_direction(t_game *game, int dx, int dy)
+static void	update_player_position(t_game *game, int nx, int ny, char dest)
 {
-	if (dy == -1)
-		game->player.direction = 0;
-	else if (dy == 1)
-		game->player.direction = 1;
-	else if (dx == -1)
-		game->player.direction = 2;
-	else if (dx == 1)
-		game->player.direction = 3;
-}
-
-/* MODIFICADA: Adicionar verificação de colisão com inimigos */
-static int	check_enemy_at_position(t_game *game, int x, int y)
-{
-	int	i;
-
-	i = 0;
-	while (i < game->enemy_count)
+	if (dest != 'E')
 	{
-		if (game->enemies[i].x == x && game->enemies[i].y == y)
-		{
-			printf("Game Over! You touched an enemy!\n");
-			close_game(game);
-			return (1);
-		}
-		i++;
+		game->map[game->player.y][game->player.x] = '0';
+		game->player.x = nx;
+		game->player.y = ny;
+		game->map[ny][nx] = 'P';
 	}
-	return (0);
+	game->player.moves++;
+	printf("Moves: %d\n", game->player.moves);
 }
 
 void	move_player(t_game *game, int dx, int dy)
@@ -80,14 +106,5 @@ void	move_player(t_game *game, int dx, int dy)
 		return ;
 	if (dest == 'C')
 		handle_collectible(game, nx, ny);
-	if (dest != 'E')
-	{
-		game->map[game->player.y][game->player.x] = '0';
-		game->map[ny][nx] = 'P';
-		game->player.x = nx;
-		game->player.y = ny;
-	}
-	game->player.moves++;
-	printf("Moves: %d\n", game->player.moves);
-	render_game(game);
+	update_player_position(game, nx, ny, dest);
 }
