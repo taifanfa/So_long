@@ -6,7 +6,7 @@
 /*   By: tmorais- <tmorais-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 16:07:12 by tmorais-          #+#    #+#             */
-/*   Updated: 2025/11/12 16:07:14 by tmorais-         ###   ########.fr       */
+/*   Updated: 2025/11/14 10:53:16 by tmorais-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	game_loop(t_game *game)
 {
 	game->frame_counter++;
 	if (game->frame_counter >= ENEMY_START_DELAY && \
-		game->frame_counter % ENEMY_MOVE_DELAY == 0)
+		game->frame_counter % 300 == 0)
 	{
 		move_enemies(game);
 	}

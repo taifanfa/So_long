@@ -6,7 +6,7 @@
 /*   By: tmorais- <tmorais-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 13:50:35 by tmorais-          #+#    #+#             */
-/*   Updated: 2025/11/12 16:12:44 by tmorais-         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:49:19 by tmorais-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,8 @@ static void	move_single_enemy(t_game *game, int i)
 	ny = game->enemies[i].y;
 	if (!can_enemy_move(game, i, nx, ny))
 	{
-		game->enemies[i].direction = get_next_direction(game->enemies[i].direction);
+		game->enemies[i].direction = get_next_direction \
+			(game->enemies[i].direction);
 		return ;
 	}
 	perform_enemy_move(game, i, nx, ny);

@@ -5,8 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tmorais- <tmorais-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/14 10:49:57 by tmorais-          #+#    #+#             */
+/*   Updated: 2025/11/14 10:52:18 by tmorais-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render_bonus.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tmorais- <tmorais-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 16:07:46 by tmorais-          #+#    #+#             */
-/*   Updated: 2025/11/12 16:28:54 by tmorais-         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:47:49 by tmorais-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +51,12 @@ static void	load_game_images(t_game *game, int size)
 	if (!game->img_exit)
 		printf("ERROR: Failed to load exit.xpm\n");
 	game->img_enemy = mlx_xpm_file_to_image(game->mlx, "textures/enemy_1.xpm", \
-        &size, &size);
+			&size, &size);
 	if (!game->img_enemy)
 	{
 		printf("CRITICAL: enemy_1.xpm failed to load!\n");
 		printf("Check if file exists and has correct XPM format\n");
-		close_game(game);  // Feche o jogo em vez de usar fallback
+		close_game(game);
 	}
 }
 
@@ -77,10 +89,18 @@ void	destroy_images(t_game *game)
 
 static void	*get_tile_image(t_game *game, char c)
 {
+	void	*img;
+
 	if (c == '1')
 		return (game->img_wall);
 	else if (c == 'P')
-		return (get_player_sprite(game));
+	{
+		img = get_player_sprite(game);
+		// Se get_player_sprite falhar, usa a imagem padrão
+		if (!img)
+			img = game->img_player;
+		return (img);
+	}
 	else if (c == 'C')
 		return (game->img_collect);
 	else if (c == 'E')
@@ -98,8 +118,12 @@ static void	put_tile(t_game *game, int x, int y, char c)
 
 	sx = x * TILE_SIZE;
 	sy = y * TILE_SIZE;
+
+	// Sempre desenha o chão primeiro (exceto para paredes)
 	if (c != '1')
 		mlx_put_image_to_window(game->mlx, game->win, game->img_floor, sx, sy);
+
+	// Depois desenha o elemento em cima
 	img = get_tile_image(game, c);
 	if (img)
 		mlx_put_image_to_window(game->mlx, game->win, img, sx, sy);

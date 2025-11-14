@@ -3,10 +3,10 @@ static char *test_vinho[] = {
 /* width height ncolors chars_per_pixel */
 "64 64 4 1",
 /* colors */
-"  c #000000",
-". c #722F37",
+"  c #5C0A20",
+". c #5C0A20",
 "X c #5C0A20",
-"o c #8B3A4A",
+"o c #5C0A20",
 /* pixels */
 "                                                                ",
 "                                                                ",
